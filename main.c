@@ -10,7 +10,7 @@
 int main(){
 	setbuf(stdout, NULL);
 
-
+	printf("Prueba");
 
 	return 0;
 }

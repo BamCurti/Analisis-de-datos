@@ -10,12 +10,13 @@
 char *leerArchivo();
 void reallocString(char **, int*);
 void readLine(char **, int*);
+char* leerString();
 
 int main(){
 	setbuf(stdout, NULL);
 	char *informacion = leerArchivo();
 
-	printf("caracteres después: %d\n\r", )
+//	printf("caracteres después: %d\n", sizeof((char *)informacion / (char));
 
 	printf("%s", informacion);
 
@@ -23,17 +24,14 @@ int main(){
 }
 
 char * leerArchivo(){
-	char *direccion = NULL;
-	int largo = 0;
-
 	printf("Ingrese direccion de documento:\n");
-	reallocString(&direccion, &largo);
-	readLine(&direccion, &largo);
+	char *direccion = leerString();
 
 	FILE *archivo = fopen((char*)direccion, "r");
 
     fseek(archivo, 0, SEEK_END);    /* file pointer at the end of file */
 	long nbytes = ftell(archivo);
+	printf("caracteres de archivo: %ld\n", nbytes);
 	rewind(archivo);
 	char *contenido = (char *)malloc(nbytes*sizeof(char));
 	int  i = 0;
@@ -63,6 +61,15 @@ void readLine(char **lst, int *largo){
         pos++;
         c = getchar();
     }
-    reallocString(lst, largo);
+//    reallocString(lst, largo);
     (*lst)[pos] = '\0';
+}
+char* leerString(){
+	char *texto = NULL;
+	int largo = 0;
+
+	reallocString(&texto, &largo);
+	readLine(&texto, &largo);
+
+	return texto;
 }

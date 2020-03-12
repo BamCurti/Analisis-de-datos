@@ -2,36 +2,54 @@
 #include <stdlib.h>
 #include "functions.h"
 
-char * leerArchivo(){
+matrix leerArchivo(int* nFilas, int* nColumnas){
 	printf("Ingrese direccion de documento:\n");
-	char *direccion = leerString();
+	string direccion = leerString();
+	FILE *archivo = fopen((string)direccion, "r");
+	free(direccion);
 
-	FILE *archivo = fopen((char*)direccion, "r");
-
-    fseek(archivo, 0, SEEK_END);    /* file pointer at the end of file */
-	long nbytes = ftell(archivo);
+    fseek(archivo, 0, SEEK_END);	/* file pointer at the end of file */
+	long nbytes = ftell(archivo);	// Numero de caracters hasta el final
 	printf("caracteres de archivo: %ld\n", nbytes);
-	rewind(archivo);
-	char *contenido = (char *)malloc(nbytes*sizeof(char));
-	int  i = 0;
+	rewind(archivo); //Volver al inicio de la función
+	string texto =  (string)malloc(nbytes * sizeof(char));
 
-	fgets(contenido, nbytes, archivo);
+	char c;
+	for(int i = 0; (c = fgetc(archivo)) != EOF; i++){
+		texto[i] = c;
 
-/*	while(i < nbytes){
-		contenido[i] = fgetc(archivo);
-		i++;
+		if(c == '\n')
+			(*nFilas)++;
+
+		if(*nFilas == 1)
+			if(c == ',')
+				(*nColumnas)++;
 	}
-	contenido[i] = '\0';*/
+	printf("%s", texto);
+
+	fclose(archivo);
+
+	matrix contenido = (matrix)malloc((*nFilas) * sizeof(char));
+
+/*	for(int indexFilas = 0; indexFilas < nFilas; indexFilas++)
+		for(int indexColumnas= 0; indexColumnas < nColumnas; indexColumnas++){
+			int indexString = 0;
+		}*/
+
+
+
+
 
 	fclose(archivo);
 	return contenido;
 }
-void reallocString(char **lst, int *largo){
+
+void reallocString(string* lst, int *largo){
     (*largo) += 1;
     char *temp = (char*) realloc(*lst, (*largo) * sizeof (char));
     *lst = temp;
 }
-void readLine(char **lst, int *largo){
+void readLine(string* lst, int *largo){
     int c;
     int pos = 0;
     fflush(stdin);
@@ -45,7 +63,7 @@ void readLine(char **lst, int *largo){
     }
     (*lst)[pos] = '\0';
 }
-char* leerString(){
+string leerString(){
 	char *texto = NULL;
 	int largo = 0;
 
@@ -54,8 +72,8 @@ char* leerString(){
 
 	return texto;
 }
-int cantidadDeCaracteres(char *string){
+int cantidadDeCaracteres(string str){
 	int i;
-	for(i = 0; string[i] != '\0'; i++);
+	for(i = 0; str[i] != '\0'; i++);
 	return i;
 }

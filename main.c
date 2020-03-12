@@ -9,14 +9,9 @@
 #include "functions.h"
 
 int main(){
+	int nFilas = 1, nColumnas = 1, nChar = 0;
 	setbuf(stdout, NULL);
-	char *informacion = leerArchivo();
-	printf("Caracteres de informacion: %d\n", cantidadDeCaracteres(informacion));
-
-	for(int i = 0; informacion[i] != '\0' ; i++)
-		printf("%c", informacion[i]);
-
-//	printf("%s", informacion);
+	matrix informacion = leerArchivo(&nFilas, &nColumnas);
 
 	return 0;
 }

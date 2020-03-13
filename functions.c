@@ -13,9 +13,9 @@ matrix leerArchivo(int* nFilas, int* nColumnas){
 	printf("caracteres de archivo: %ld\n", nbytes);
 	rewind(archivo); //Volver al inicio de la función
 	string texto =  (string)malloc(nbytes * sizeof(char));
-
+	int i;
 	char c;
-	for(int i = 0; (c = fgetc(archivo)) != EOF; i++){
+	for(i = 0; (c = fgetc(archivo)) != EOF; i++){
 		texto[i] = c;
 
 		if(c == '\n')
@@ -25,19 +25,42 @@ matrix leerArchivo(int* nFilas, int* nColumnas){
 			if(c == ',')
 				(*nColumnas)++;
 	}
+	texto[i] = '\0';
 	printf("%s", texto);
 
 	fclose(archivo);
 
 	matrix contenido = (matrix)malloc((*nFilas) * sizeof(char));
+	//Se crea el esqueleto de la matriz
+	//Solo contiene las filas del documento
+	int indexTexto = 0, indexFilas = 0, indexString = 0, indexColumnas = 0;
 
-/*	for(int indexFilas = 0; indexFilas < nFilas; indexFilas++)
-		for(int indexColumnas= 0; indexColumnas < nColumnas; indexColumnas++){
-			int indexString = 0;
-		}*/
+	for(indexTexto = 0; texto[indexTexto] != '\0'; indexTexto++){
+
+
+	}
+
+/*	for(int indexFilas = 0; indexFilas < *nFilas; indexFilas++){
+
+		int indexString = 0;
+		//Por cada fila, se crea la columna correspondiente
+		contenido[indexFilas] = (columna)malloc((*nColumnas) * sizeof(char));
+
+		for(int indexColumnas= 0; indexColumnas < *nColumnas; indexColumnas++){
+			if(indexString == 0) //Si el string está emprezando
+				contenido[indexFilas][indexColumnas] = (string)malloc(indexString * sizeof(char));
+
+			if(texto[indexTexto] == ',' || texto[indexTexto] == '\n') //Si el char es un cambio de columna
+				indexString = 0;
+
+			else
+				indexString++;
 
 
 
+			i++;
+		}
+	}*/
 
 
 	fclose(archivo);

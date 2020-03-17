@@ -10,11 +10,11 @@ matrix leerArchivo(int* nFilas, int* nColumnas){
 
     fseek(archivo, 0, SEEK_END);	/* file pointer at the end of file */
 	long nbytes = ftell(archivo);	// Numero de caracters hasta el final
-	printf("caracteres de archivo: %ld\n", nbytes);
 	rewind(archivo); //Volver al inicio de la función
 	string texto =  (string)malloc(nbytes * sizeof(char));
 	int i;
 	char c;
+
 	for(i = 0; (c = fgetc(archivo)) != EOF; i++){
 		texto[i] = c;
 
@@ -26,42 +26,51 @@ matrix leerArchivo(int* nFilas, int* nColumnas){
 				(*nColumnas)++;
 	}
 	texto[i] = '\0';
-	printf("%s", texto);
+
+//	printf("%s", texto);
 
 	fclose(archivo);
 
 	matrix contenido = (matrix)malloc((*nFilas) * sizeof(char));
+
 	//Se crea el esqueleto de la matriz
 	//Solo contiene las filas del documento
+	contenido[0] = crearColumna(*nColumnas);
+	contenido[0][0] = crearString();
+
 	int indexTexto = 0, indexFilas = 0, indexString = 0, indexColumnas = 0;
 
-	for(indexTexto = 0; texto[indexTexto] != '\0'; indexTexto++){
+	for(indexTexto = 0; texto[indexTexto] != '\0'; indexTexto++)
+	{
+		c = texto[indexTexto];
+		if(c == '\n'){ //Siguiente fila
+//			printf("Nueva fila\n");
+			indexFilas++;
+			indexColumnas = 0;
+			indexString = 0;
+			contenido[indexFilas] = crearColumna(*nColumnas);
+			contenido[indexFilas][indexColumnas] = crearString();
+			printf("\n");
+
+		}
+
+		else if(c == ','){ //Siguiente columna
+//			printf("Nueva columna\n");
+			indexColumnas++;
+			contenido[indexFilas][indexColumnas] = crearString();
+			indexString = 0;
+			printf("\t");
+		}
+
+		else{ //Solo agregas nuevo char
+	//		printf("Nueva char\n");
+			reallocString(&contenido[indexFilas][indexColumnas], &indexString);
+			contenido[indexFilas][indexColumnas][indexString] = c;
+			printf("%c", contenido[indexFilas][indexColumnas][indexString]);
+		}
 
 
 	}
-
-/*	for(int indexFilas = 0; indexFilas < *nFilas; indexFilas++){
-
-		int indexString = 0;
-		//Por cada fila, se crea la columna correspondiente
-		contenido[indexFilas] = (columna)malloc((*nColumnas) * sizeof(char));
-
-		for(int indexColumnas= 0; indexColumnas < *nColumnas; indexColumnas++){
-			if(indexString == 0) //Si el string está emprezando
-				contenido[indexFilas][indexColumnas] = (string)malloc(indexString * sizeof(char));
-
-			if(texto[indexTexto] == ',' || texto[indexTexto] == '\n') //Si el char es un cambio de columna
-				indexString = 0;
-
-			else
-				indexString++;
-
-
-
-			i++;
-		}
-	}*/
-
 
 	fclose(archivo);
 	return contenido;
@@ -69,8 +78,12 @@ matrix leerArchivo(int* nFilas, int* nColumnas){
 
 void reallocString(string* lst, int *largo){
     (*largo) += 1;
-    char *temp = (char*) realloc(*lst, (*largo) * sizeof (char));
+    string temp = NULL;
+    while(temp == NULL){
+    	temp = (string) realloc(*lst, (*largo) * sizeof (char));
+    }
     *lst = temp;
+//    free(temp);
 }
 void readLine(string* lst, int *largo){
     int c;
@@ -99,4 +112,48 @@ int cantidadDeCaracteres(string str){
 	int i;
 	for(i = 0; str[i] != '\0'; i++);
 	return i;
+}
+string crearString(){
+	string new = NULL;
+	while(new == NULL)
+		new = (string)calloc(0, sizeof(char)); //string sin caracteres
+	return new;
+}
+columna crearColumna(int n){
+	columna new = NULL;
+	while(new == NULL){
+		new = calloc(n, sizeof(char));
+	}
+	return new;
+}
+void printMatrix(matrix info){
+	int nFilas = cantidadDeFilas(info);
+	int nColumnas = cantidadDeColumnas(info);
+
+	for(int i = 0; i < nFilas; i++){
+		for(int j = 0; j < nColumnas; j++)
+		{
+			for(int k = 0; info[i][j][k] != '\0'; k++)
+				printf("%c", info[i][j][k]);
+
+			printf("\t");
+		}
+		printf("\n");
+	}
+
+}
+
+int cantidadDeFilas(matrix info){
+	int i;
+	for(i = 0; info[i] != NULL; i++);
+	return i;
+}
+int cantidadDeColumnas(matrix info){
+	int i;
+	for(i = 0; info[0][i] != NULL; i++);
+	return i;
+}
+void freeString(string str){
+	for(int i = 0; str[i] != '\0'; i++)
+		free(&str[i]);
 }

@@ -9,9 +9,10 @@
 #include "functions.h"
 
 int main(){
-	int nFilas = 1, nColumnas = 1, nChar = 0;
+	int nFilas = 1, nColumnas = 1;
 	setbuf(stdout, NULL);
 	matrix informacion = leerArchivo(&nFilas, &nColumnas);
+	printMatrix(informacion);
 
 	return 0;
 }

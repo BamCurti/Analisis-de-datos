@@ -38,37 +38,53 @@ matrix leerArchivo(int* nFilas, int* nColumnas){
 	contenido[0] = crearColumna(*nColumnas);
 	contenido[0][0] = crearString();
 
-	int indexTexto = 0, indexFilas = 0, indexString = 0, indexColumnas = 0;
+	int indexTexto = 0, indexFilas = 0, indexString = 0, indexColumnas = 0, primerCar = 0, ultimoCar = 0;
 
 	for(indexTexto = 0; texto[indexTexto] != '\0'; indexTexto++)
 	{
 		c = texto[indexTexto];
 		if(c == '\n'){ //Siguiente fila
-//			printf("Nueva fila\n");
-			indexFilas++;
+/*			indexFilas++;
 			indexColumnas = 0;
 			indexString = 0;
 			contenido[indexFilas] = crearColumna(*nColumnas);
-			contenido[indexFilas][indexColumnas] = crearString();
+			contenido[indexFilas][indexColumnas] = crearString();*/
+
+			contenido[indexFilas][indexColumnas] = prototipoString(texto, primerCar, ultimoCar);
+			ultimoCar = indexTexto +1;
+			primerCar = indexTexto +1;
+
+			indexFilas++;
+			indexColumnas = 0;
+			contenido[indexFilas] = crearColumna(*nColumnas);
+
 			printf("\n");
 
 		}
 
 		else if(c == ','){ //Siguiente columna
 //			printf("Nueva columna\n");
-			indexColumnas++;
+/*			indexColumnas++;
 			contenido[indexFilas][indexColumnas] = crearString();
-			indexString = 0;
+			indexString = 0;*/
+
+			contenido[indexFilas][indexColumnas] = prototipoString(texto, primerCar, ultimoCar);
+			ultimoCar = indexTexto +1;
+			primerCar = indexTexto +1;
+
+			indexColumnas++;
+
 			printf("\t");
 		}
 
 		else{ //Solo agregas nuevo char
 	//		printf("Nueva char\n");
-			reallocString(&contenido[indexFilas][indexColumnas], &indexString);
+/*			reallocString(&contenido[indexFilas][indexColumnas], &indexString);
 			contenido[indexFilas][indexColumnas][indexString] = c;
-			printf("%c", contenido[indexFilas][indexColumnas][indexString]);
-		}
+			printf("%c", contenido[indexFilas][indexColumnas][indexString]);*/
 
+			ultimoCar = indexTexto;
+		}
 
 	}
 
@@ -156,4 +172,20 @@ int cantidadDeColumnas(matrix info){
 void freeString(string str){
 	for(int i = 0; str[i] != '\0'; i++)
 		free(&str[i]);
+}
+string prototipoString(string info, int indexMenor, int indexMayor){
+	string value = NULL;
+	int size = indexMayor - indexMenor;
+	while(value == NULL)
+		value = (string)malloc(size * sizeof(char));
+
+	int j = 0;
+	for(int i = indexMenor; i < indexMayor; i++){
+		value[j] = info[i];
+		j++;
+	}
+
+//	printf("%s", value);
+
+	return value;
 }

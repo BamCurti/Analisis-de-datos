@@ -21,6 +21,8 @@ columna crearColumna(int);
 int cantidadDeFilas(matrix );
 int cantidadDeColumnas(matrix );
 void freeString(string);
+string prototipoString(string info, int indexMenor, int indexMayor);
+
 
 //FUNCIONES A CODIFICAR
 

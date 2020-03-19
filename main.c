@@ -12,7 +12,9 @@ int main(){
 	int nFilas = 1, nColumnas = 1;
 	setbuf(stdout, NULL);
 	matrix informacion = leerArchivo(&nFilas, &nColumnas);
-	printMatrix(informacion);
+
+	printf("%c", informacion[0][0][0]);
+//	printMatrix(informacion, nFilas, nColumnas);
 
 	return 0;
 }

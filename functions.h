@@ -31,6 +31,6 @@ int desvEstandar(matrix);
 int varianza(matrix);
 int sumatoria(matrix);
 int conteo(matrix);
-void printMatrix(matrix);
+void printMatrix(matrix, int, int);
 
 #endif /* FUNCTIONS_H_ */

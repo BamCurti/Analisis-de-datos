@@ -1,6 +1,8 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include "functions.h"
+
 
 matrix leerArchivo(int* nFilas, int* nColumnas){
 	printf("Ingrese direccion de documento:\n");
@@ -40,12 +42,11 @@ matrix leerArchivo(int* nFilas, int* nColumnas){
 
 	int indexTexto = 0, indexFilas = 0, indexString = 0, indexColumnas = 0;
 
-	for(indexTexto = 0; indexTexto < cantidadDeCaracteres(texto); indexTexto++)
+	for(indexTexto = 0; indexTexto < strlen(texto); indexTexto++)
 	{
 		c = texto[indexTexto];
 
 		if(c == '\n' || c == ','){
-			reallocString(&contenido[indexFilas][indexColumnas], &indexString);
 			contenido[indexFilas][indexColumnas][indexString] = '\0';
 			indexString = 0;
 
@@ -61,7 +62,6 @@ matrix leerArchivo(int* nFilas, int* nColumnas){
 				printf("\t");
 			}
 			contenido[indexFilas][indexColumnas] = crearString();
-
 		}
 
 
@@ -167,3 +167,29 @@ string prototipoString(string info, int indexMenor, int indexMayor){
 
 	return value;
 }
+
+int stringToInt(string str){
+	int nCar = cantidadDeCaracteres(str);
+	int value = 0;
+	int exp = 1;
+
+	for(int i = 1; i <= nCar;i++){
+		value += (str[i-1] - '0') * exp;
+		exp *= 10;
+	}
+
+	return value;
+}
+float stringToFloat(string str){
+	int nCar = cantidadDeCaracteres(str);
+	float value = 0;
+	int exp = cantidadDeCaracteres(str) - 1;
+
+	for(int i = 1; i <= nCar;i++){
+		value += (str[i-1] - '0') * exp;
+		exp *= 10;
+	}
+
+	return value;
+}
+

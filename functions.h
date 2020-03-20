@@ -25,6 +25,8 @@ string prototipoString(string info, int indexMenor, int indexMayor);
 
 
 //FUNCIONES A CODIFICAR
+int stringToInt(string);
+float stringToFloat(string);
 
 int media(matrix);
 int desvEstandar(matrix);

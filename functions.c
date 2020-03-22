@@ -7,10 +7,9 @@
 
 matrix leerArchivo(int* nFilas, int* nColumnas){
 	printf("Ingrese direccion de documento:\n");
-//	string direccion = leerString();
-	char direccion[] = "ejem.csv";
+	string direccion = leerString();
 	FILE *archivo = fopen((string)direccion, "r");
-//	free(direccion);
+	free(direccion);
 
     fseek(archivo, 0, SEEK_END);	/* file pointer at the end of file */
 	long nbytes = ftell(archivo);	// Numero de caracters hasta el final
@@ -256,3 +255,34 @@ int cantidadDeNumeros(matrix info, int fil, int col){
 
 	return n;
 }
+int conteo(matrix info, int wichColumn, int nFila, int nColumna){
+	if(identificarTipoColumna(info, nFila, wichColumn) != STR)
+		return cantidadDeNumeros(info, nFila, wichColumn);
+
+	else
+		return nFila - 1;
+}
+void freeColumn(columna info, int nCol){
+	for(int i = 0; i < nCol; i++) //Numero de strings
+		freeString(info[i]);
+}
+void freeMatrix(matrix info, int nCol, int nFil){
+	for(int i = 0; i < nFil; i++)
+		freeColumn(info[i], nCol);
+}
+void printDicionario(matrix info, int nFila, int nCol){
+	printf("Numero de filas: %d\n", nFila);
+	printf("Numero de columnas: %d\n", nCol);
+	printf("Descripcion de campos:\n");
+
+	for(int i = 0; i < nCol; i++){
+		printf("%s\t", info[0][i]);
+		if(identificarTipoColumna(info,nFila, i) == INTEGER) printf("ENTERO\t");
+		if(identificarTipoColumna(info,nFila, i) == FLOAT) printf("FLOTANTE\t");
+		if(identificarTipoColumna(info,nFila, i) == STR) printf("STRING\t");
+
+		printf("%d\n", conteo(info, i, nFila, nCol));
+	}
+
+}
+

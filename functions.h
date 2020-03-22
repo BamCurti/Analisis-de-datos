@@ -30,12 +30,12 @@ float media(matrix, int, int, int);
 float desvEstandar(matrix, int, int, int);
 float varianza(matrix , int , int , int );
 float sumatoria(matrix , int, int, int);
-int conteo(matrix);
+int conteo(matrix, int, int, int);
+void freeMatrix(matrix, int, int);
+void freeColumn(columna, int);
 
 //FUNCIONES A CODIFICAR
-void freeMatrix(matrix);
-void freeColumn(columna);
-void printDicionario(matrix, int);
+void printDicionario(matrix, int, int);
 
 //FUNCIONES A MEJORAR
 

@@ -12,15 +12,11 @@
 int main(){
 	int nFilas = 1, nColumnas = 1;
 	setbuf(stdout, NULL);
-	string value =	(string)calloc(4, sizeof(char));
-	value[0] = '1';
-	value[1] = '.';
-	value[2] = '3';
-	value[3] = '\0';
 
 	matrix informacion = leerArchivo(&nFilas, &nColumnas);
 
-//	printMatrix(informacion, nFilas, nColumnas);
+	printMatrix(informacion, nFilas, nColumnas);
 
+	printf("%f", varianza(informacion, 6, 1, nFilas));
 	return 0;
 }

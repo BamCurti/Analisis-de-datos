@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <math.h>
 #include "functions.h"
 
 
@@ -28,53 +29,48 @@ matrix leerArchivo(int* nFilas, int* nColumnas){
 				(*nColumnas)++;
 	}
 	texto[i] = '\0';
-
-//	printf("%s\n", texto);
-
 	fclose(archivo);
 
-	matrix contenido = (matrix)malloc((*nFilas) * sizeof(columna));
+	matrix contenido = crearMatrix(*nFilas);
 
 	//Se crea el esqueleto de la matriz
 	//Solo contiene las filas del documento
 	contenido[0] = crearColumna(*nColumnas);
 	contenido[0][0] = crearString();
 
-	int indexTexto = 0, indexFilas = 0, indexString = 0, indexColumnas = 0;
+	int indexTexto = 0, indexFilas = 0, indexString = 1, indexColumnas = 0;
 
 	for(indexTexto = 0; indexTexto < strlen(texto); indexTexto++)
 	{
-		c = texto[indexTexto];
+		if(texto[indexTexto] == ',' || texto[indexTexto] == '\n'){
+			contenido[indexFilas][indexColumnas][indexString -1] = '\0';
+			indexString = 1;
 
-		if(c == '\n' || c == ','){
-			contenido[indexFilas][indexColumnas][indexString] = '\0';
-			indexString = 0;
-
-			if(c == '\n'){ //Siguiente fila
-				indexFilas++;
-				indexColumnas = 0;
-				contenido[indexFilas] = crearColumna(*nColumnas);
-				printf("\n");
-			}
-
-			if(c == ','){ //Siguiente columna
+			if(texto[indexTexto] == ','){
 				indexColumnas++;
-				printf("\t");
+				contenido[indexFilas][indexColumnas] = crearString();
+//				printf("\t");
 			}
-			contenido[indexFilas][indexColumnas] = crearString();
+
+			if(texto[indexTexto] == '\n'){
+//				printf("\n");
+				indexColumnas = 0;
+				indexFilas++;
+				contenido[indexFilas] = crearColumna(*nColumnas);
+				contenido[indexFilas][indexColumnas] = crearString();
+			}
+
 		}
 
-
-		else{ //Solo agregas nuevo char
-
-			contenido[indexFilas][indexColumnas][indexString] = c;
-			printf("%c", contenido[indexFilas][indexColumnas][indexString]);
+		else{
+			contenido[indexFilas][indexColumnas][indexString - 1] = texto[indexTexto];
+//			printf("%c", contenido[indexFilas][indexColumnas][indexString - 1]);
 			reallocString(&contenido[indexFilas][indexColumnas], &indexString);
-
 		}
+
+
 	}
 
-	fclose(archivo);
 	return contenido;
 }
 
@@ -128,68 +124,109 @@ columna crearColumna(int n){
 	}
 	return new;
 }
-void printMatrix(matrix info, int c, int f){
+matrix crearMatrix(int n){
+	matrix temp = NULL;
+	while(temp == NULL)
+		temp = (matrix)malloc(n * sizeof(columna));
+
+	return temp;
+}
+void printMatrix(matrix info, int f, int c){
 
 	for(int i = 0; i < f; i++){
 		for(int j = 0; j < c; j++)
-			printf("%s\t", info[f][c]);
+			printf("%s\t", info[i][j]);
 
 		printf("\n");
 	}
 
 }
 
-int cantidadDeFilas(matrix info){
-	int i;
-	for(i = 0; info[i] != NULL; i++);
-	return i;
-}
-int cantidadDeColumnas(matrix info){
-	int i;
-	for(i = 0; info[0][i] != NULL; i++);
-	return i;
-}
 void freeString(string str){
-	for(int i = 0; str[i] != '\0'; i++)
+	for(int i = 0; i < strlen(str); i++)
 		free(&str[i]);
 }
-string prototipoString(string info, int indexMenor, int indexMayor){
-	string value = NULL;
-	int size = indexMayor - indexMenor;
-	while(value == NULL)
-		value = (string)malloc(size * sizeof(char));
+int identificarTipo(string str){
+	int flag = INTEGER;
+	int contadorDePuntos = 0;
+	for(int i = 0; i < strlen(str); i++){
+		if(str[i] == '.'){
+			contadorDePuntos++;
+			flag = FLOAT;
+		}
 
-	int j = 0;
-	for(int i = indexMenor; i < indexMayor; i++){
-		value[j] = info[i];
-		j++;
+		if(!(str[i]>= '0' && str[i]<= '9'))
+		{
+			if(contadorDePuntos != 1)
+				flag = STR;
+		}
 	}
 
-	return value;
+
+	return flag;
 }
 
-int stringToInt(string str){
-	int nCar = cantidadDeCaracteres(str);
-	int value = 0;
-	int exp = 1;
+float media(matrix info, int indexColumna,int fInicio, int fFinal){
+	float promedio = 0;
+	int type = identificarTipo(info[fInicio][indexColumna]);
 
-	for(int i = 1; i <= nCar;i++){
-		value += (str[i-1] - '0') * exp;
-		exp *= 10;
+
+	if(type == STR){
+		printf("No se puede realizar la función\n");
+		return -1;
 	}
 
-	return value;
-}
-float stringToFloat(string str){
-	int nCar = cantidadDeCaracteres(str);
-	float value = 0;
-	int exp = cantidadDeCaracteres(str) - 1;
-
-	for(int i = 1; i <= nCar;i++){
-		value += (str[i-1] - '0') * exp;
-		exp *= 10;
+	else{
+		promedio = sumatoria(info, indexColumna, fInicio, fFinal);
 	}
 
-	return value;
+	promedio /= (fFinal - fInicio);
+
+	return promedio;
 }
 
+float desvEstandar(matrix info, int indexColumna, int fInicio, int fFinal){
+	float result = 0;
+	float promedio = media(info, indexColumna, fInicio, fFinal);
+	int i;
+	int type = identificarTipo(info[fInicio][indexColumna]);
+
+	if(type == STR){
+		printf("No se puede realizar la función\n");
+		return -1;
+	}
+
+	else{
+		for(i = fInicio; i < fFinal; i++){
+			result += pow((atof(info[i][indexColumna]) - promedio), 2);
+	}
+		result /= (i - 1);
+		result = sqrt(result);
+
+	}
+	return result;
+}
+
+float varianza(matrix info, int indexColumna, int fInicio, int fFinal){
+	return pow(desvEstandar(info, indexColumna, fInicio, fFinal), 2);
+}
+
+float sumatoria(matrix info, int indexColumna, int fInicio, int fFinal){
+	float result;
+	int type = identificarTipo(info[fInicio][indexColumna]);
+	int i;
+
+	if(type == STR){
+		printf("No se puede realizar la función\n");
+		return -1;
+	}
+
+	else{
+		for(i = fInicio; i < fFinal; i++){
+			result += atof(info[i][indexColumna]);
+		}
+	}
+
+
+	return result;
+}

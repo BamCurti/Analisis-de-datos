@@ -11,6 +11,8 @@ typedef char*** matrix;
 typedef char** columna;
 typedef char* string;
 
+typedef enum {INTEGER, FLOAT, STR} type;
+
 matrix leerArchivo(int*, int*);
 void reallocString(string*, int*);
 void readLine(string*, int*);
@@ -18,21 +20,17 @@ string leerString();
 int cantidadDeCaracteres(string);
 string crearString();
 columna crearColumna(int);
-int cantidadDeFilas(matrix );
-int cantidadDeColumnas(matrix );
-void freeString(string);
-string prototipoString(string info, int indexMenor, int indexMayor);
 
+void freeString(string);
+int identificarTipo(string);
+matrix crearMatrix(int);
+void printMatrix(matrix , int , int );
 
 //FUNCIONES A CODIFICAR
-int stringToInt(string);
-float stringToFloat(string);
-
-int media(matrix);
-int desvEstandar(matrix);
-int varianza(matrix);
-int sumatoria(matrix);
+float media(matrix, int, int, int);
+float desvEstandar(matrix, int, int, int);
+float varianza(matrix , int , int , int );
+float sumatoria(matrix , int , int , int );
 int conteo(matrix);
-void printMatrix(matrix, int, int);
 
 #endif /* FUNCTIONS_H_ */

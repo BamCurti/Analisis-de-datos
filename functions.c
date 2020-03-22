@@ -7,9 +7,10 @@
 
 matrix leerArchivo(int* nFilas, int* nColumnas){
 	printf("Ingrese direccion de documento:\n");
-	string direccion = leerString();
+//	string direccion = leerString();
+	char direccion[] = "ejem.csv";
 	FILE *archivo = fopen((string)direccion, "r");
-	free(direccion);
+//	free(direccion);
 
     fseek(archivo, 0, SEEK_END);	/* file pointer at the end of file */
 	long nbytes = ftell(archivo);	// Numero de caracters hasta el final
@@ -40,7 +41,7 @@ matrix leerArchivo(int* nFilas, int* nColumnas){
 
 	int indexTexto = 0, indexFilas = 0, indexString = 1, indexColumnas = 0;
 
-	for(indexTexto = 0; indexTexto < strlen(texto); indexTexto++)
+	for(indexTexto = 0; indexTexto <= strlen(texto); indexTexto++)
 	{
 		if(texto[indexTexto] == ',' || texto[indexTexto] == '\n'){
 			contenido[indexFilas][indexColumnas][indexString -1] = '\0';
@@ -146,7 +147,7 @@ void freeString(string str){
 	for(int i = 0; i < strlen(str); i++)
 		free(&str[i]);
 }
-int identificarTipo(string str){
+int identificarTipoString(string str){
 	int flag = INTEGER;
 	int contadorDePuntos = 0;
 	for(int i = 0; i < strlen(str); i++){
@@ -162,13 +163,15 @@ int identificarTipo(string str){
 		}
 	}
 
+	if(strcmp(str, "") == 0)
+		flag = STR;
+
 
 	return flag;
 }
-
 float media(matrix info, int indexColumna,int fInicio, int fFinal){
 	float promedio = 0;
-	int type = identificarTipo(info[fInicio][indexColumna]);
+	int type = identificarTipoString(info[fInicio][indexColumna]);
 
 
 	if(type == STR){
@@ -184,12 +187,11 @@ float media(matrix info, int indexColumna,int fInicio, int fFinal){
 
 	return promedio;
 }
-
 float desvEstandar(matrix info, int indexColumna, int fInicio, int fFinal){
 	float result = 0;
 	float promedio = media(info, indexColumna, fInicio, fFinal);
 	int i;
-	int type = identificarTipo(info[fInicio][indexColumna]);
+	int type = identificarTipoString(info[fInicio][indexColumna]);
 
 	if(type == STR){
 		printf("No se puede realizar la función\n");
@@ -206,14 +208,12 @@ float desvEstandar(matrix info, int indexColumna, int fInicio, int fFinal){
 	}
 	return result;
 }
-
 float varianza(matrix info, int indexColumna, int fInicio, int fFinal){
 	return pow(desvEstandar(info, indexColumna, fInicio, fFinal), 2);
 }
-
 float sumatoria(matrix info, int indexColumna, int fInicio, int fFinal){
 	float result;
-	int type = identificarTipo(info[fInicio][indexColumna]);
+	int type = identificarTipoString(info[fInicio][indexColumna]);
 	int i;
 
 	if(type == STR){
@@ -229,4 +229,34 @@ float sumatoria(matrix info, int indexColumna, int fInicio, int fFinal){
 
 
 	return result;
+}
+
+int identificarTipoColumna(matrix info, int f, int c){
+	int type;
+	int nInt, nFloat, nString;
+
+	for(int i = 0; i < f; i++){
+		type = identificarTipoString(info[i][c]);
+
+		if(type == INTEGER) nInt++;
+		if(type == FLOAT)	nFloat++;
+		if(type == STR)		nString++;
+	}
+
+	if(nInt > nFloat && nInt > nString)	type = INTEGER;
+	if(nFloat > nInt && nFloat > nString) type = FLOAT;
+	if(nString > nInt && nString > nFloat) type = STR;
+
+	return type;
+
+}
+int cantidadDeNumeros(matrix info, int fil, int col){
+	int n = 0;
+
+	for(int i = 0; i < fil; i++){
+		if(identificarTipoString(info[i][col]) != STR)
+			n++;
+	}
+
+	return n;
 }

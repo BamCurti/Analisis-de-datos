@@ -22,11 +22,15 @@ string crearString();
 columna crearColumna(int);
 
 void freeString(string);
-int identificarTipo(string);
+int identificarTipoString(string);
 matrix crearMatrix(int);
 void printMatrix(matrix , int , int );
+int identificarTipoColumna(matrix, int, int);
 
 //FUNCIONES A CODIFICAR
+int cantidadDeNumeros(matrix,int,  int);
+
+//FUNCIONES A MEJORAR
 float media(matrix, int, int, int);
 float desvEstandar(matrix, int, int, int);
 float varianza(matrix , int , int , int );

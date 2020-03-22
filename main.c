@@ -14,9 +14,7 @@ int main(){
 	setbuf(stdout, NULL);
 
 	matrix informacion = leerArchivo(&nFilas, &nColumnas);
+	printf("%d",cantidadDeNumeros(informacion,nFilas,5));
 
-	printMatrix(informacion, nFilas, nColumnas);
-
-	printf("%f", varianza(informacion, 6, 1, nFilas));
 	return 0;
 }

@@ -169,29 +169,25 @@ int identificarTipoString(string str){
 
 	return flag;
 }
-float media(matrix info, int indexColumna,int fInicio, int fFinal){
+float media(matrix info, int wichColumn,int nFila, int nColumna){
 	float promedio = 0;
-	int type = identificarTipoString(info[fInicio][indexColumna]);
-
+	int type = identificarTipoColumna(info, nFila, wichColumn);
 
 	if(type == STR){
 		printf("No se puede realizar la función\n");
 		return -1;
 	}
 
-	else{
-		promedio = sumatoria(info, indexColumna, fInicio, fFinal);
-	}
-
-	promedio /= (fFinal - fInicio);
+	promedio = sumatoria(info, wichColumn, nFila, nColumna);
+	promedio /= cantidadDeNumeros(info, nFila, wichColumn);
 
 	return promedio;
 }
-float desvEstandar(matrix info, int indexColumna, int fInicio, int fFinal){
+float desvEstandar(matrix info, int wichColumn, int nFila, int nColumna){
 	float result = 0;
-	float promedio = media(info, indexColumna, fInicio, fFinal);
+	float promedio = media(info, wichColumn, nFila, nColumna);
 	int i;
-	int type = identificarTipoString(info[fInicio][indexColumna]);
+	int type = identificarTipoColumna(info, nFila, wichColumn);
 
 	if(type == STR){
 		printf("No se puede realizar la función\n");
@@ -199,21 +195,22 @@ float desvEstandar(matrix info, int indexColumna, int fInicio, int fFinal){
 	}
 
 	else{
-		for(i = fInicio; i < fFinal; i++){
-			result += pow((atof(info[i][indexColumna]) - promedio), 2);
+		for(i = 0; i < nFila; i++){
+			if(identificarTipoString(info[i][wichColumn]) != STR)
+				result += pow((atof(info[i][wichColumn]) - promedio), 2);
 	}
-		result /= (i - 1);
+		result /= cantidadDeNumeros(info, nFila, wichColumn);
 		result = sqrt(result);
 
 	}
 	return result;
 }
-float varianza(matrix info, int indexColumna, int fInicio, int fFinal){
-	return pow(desvEstandar(info, indexColumna, fInicio, fFinal), 2);
+float varianza(matrix info, int wichColumn, int nFila, int nColumna){
+	return pow(desvEstandar(info, wichColumn, nFila, nColumna), 2);
 }
-float sumatoria(matrix info, int indexColumna, int fInicio, int fFinal){
-	float result;
-	int type = identificarTipoString(info[fInicio][indexColumna]);
+float sumatoria(matrix info,int wichColumn, int nFila, int nColumna){
+	float result = 0;
+	int type = identificarTipoColumna(info, nFila, wichColumn);
 	int i;
 
 	if(type == STR){
@@ -221,19 +218,18 @@ float sumatoria(matrix info, int indexColumna, int fInicio, int fFinal){
 		return -1;
 	}
 
-	else{
-		for(i = fInicio; i < fFinal; i++){
-			result += atof(info[i][indexColumna]);
-		}
-	}
+	else
+		for(i = 0; i < nFila; i++)
+			if(identificarTipoString(info[i][wichColumn]) != STR)
+				result += atof(info[i][wichColumn]);
 
 
 	return result;
 }
 
 int identificarTipoColumna(matrix info, int f, int c){
-	int type;
-	int nInt, nFloat, nString;
+	int type = INTEGER;
+	int nInt = 0, nFloat = 0, nString = 0;
 
 	for(int i = 0; i < f; i++){
 		type = identificarTipoString(info[i][c]);

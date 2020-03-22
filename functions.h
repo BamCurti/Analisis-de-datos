@@ -20,21 +20,24 @@ string leerString();
 int cantidadDeCaracteres(string);
 string crearString();
 columna crearColumna(int);
-
 void freeString(string);
 int identificarTipoString(string);
 matrix crearMatrix(int);
 void printMatrix(matrix , int , int );
 int identificarTipoColumna(matrix, int, int);
-
-//FUNCIONES A CODIFICAR
 int cantidadDeNumeros(matrix,int,  int);
-
-//FUNCIONES A MEJORAR
 float media(matrix, int, int, int);
 float desvEstandar(matrix, int, int, int);
 float varianza(matrix , int , int , int );
-float sumatoria(matrix , int , int , int );
+float sumatoria(matrix , int, int, int);
 int conteo(matrix);
+
+//FUNCIONES A CODIFICAR
+void freeMatrix(matrix);
+void freeColumn(columna);
+void printDicionario(matrix, int);
+
+//FUNCIONES A MEJORAR
+
 
 #endif /* FUNCTIONS_H_ */
